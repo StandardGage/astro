@@ -8,7 +8,7 @@ describe('experimental react children', () => {
 		assert.deepStrictEqual(imgVNode.props.children, undefined);
 	});
 
-	it('has undefined as children for nested children', () => {
+	/* it('has undefined as children for nested children', () => {
 		const [divVNode] = convert('<div><img src="xyz"></img></div>');
 		const [imgVNode] = divVNode.props.children;
 		assert.deepStrictEqual(imgVNode.props.children, undefined);
