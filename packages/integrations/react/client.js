@@ -1,6 +1,7 @@
 import { createElement, startTransition } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import StaticHtml from './static-html.js';
+import { convert } from './vnode-children.js';
 
 function isAlreadyHydrated(element) {
 	for (const key in element) {
@@ -35,6 +36,14 @@ function createReactElementFromDOMElement(element) {
 
 function getChildren(childString, experimentalReactChildren) {
 	if (experimentalReactChildren && childString) {
+		return convert(childString);
+	} else if (childString) {
+		return createElement('img', { value: childString });
+	} else {
+		return undefined;
+	}
+	console.log('--------------------hello-------------------');
+	/*if (experimentalReactChildren && childString) {
 		let children = [];
 		let template = document.createElement('template');
 		template.innerHTML = childString;
@@ -43,10 +52,10 @@ function getChildren(childString, experimentalReactChildren) {
 		}
 		return children;
 	} else if (childString) {
-		return createElement(StaticHtml, { value: childString });
+		return createElement('img', { value: childString });
 	} else {
 		return undefined;
-	}
+	} */
 }
 
 export default (element) =>

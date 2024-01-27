@@ -1,6 +1,7 @@
 ---
 // Component Imports
 import Counter from '../components/Counter';
+import Carousel from '../components/Carousel';
 const someProps = {
 	count: 0,
 };
@@ -31,6 +32,11 @@ const someProps = {
 			<Counter {...someProps} client:visible>
 				<h1>Hello, React!</h1>
 			</Counter>
+			<Carousel client:load>
+				<img src="https://placekitten.com/200/300" alt="kitten" />
+				<img src="https://placekitten.com/200/300" alt="kitten" />
+				<img src="https://placekitten.com/200/300" alt="kitten" />
+			</Carousel>
 		</main>
 	</body>
 </html>
