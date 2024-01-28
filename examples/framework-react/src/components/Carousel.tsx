@@ -23,9 +23,9 @@ export default function Carousel({ children}: CarouselProps) {
       <button onClick={handleNext}>Next</button>
       <div>
         {Children.map(children, (child, index) => {
-          return <div>{child}</div>;
+          return index === activeIndex ? child : null;
         })}
-        
+        {activeIndex}
       </div>
     </div>
   );

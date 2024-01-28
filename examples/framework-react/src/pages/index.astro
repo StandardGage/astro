@@ -2,6 +2,7 @@
 // Component Imports
 import Counter from '../components/Counter';
 import Carousel from '../components/Carousel';
+import { Image } from 'astro:assets';
 const someProps = {
 	count: 0,
 };
@@ -29,14 +30,31 @@ const someProps = {
 	</head>
 	<body>
 		<main>
-			<Counter {...someProps} client:visible>
-				<h1>Hello, React!</h1>
-			</Counter>
-			<Carousel client:load>
-				<img src="https://placekitten.com/200/300" alt="kitten" />
-				<img src="https://placekitten.com/200/300" alt="kitten" />
-				<img src="https://placekitten.com/200/300" alt="kitten" />
-			</Carousel>
+			
+			
+				<Carousel client:load>
+					<img src="https://placekitten.com/200/200" alt="kitten" />
+					<img src="https://placekitten.com/200/300" alt="kitten" />
+					<img src="https://placekitten.com/200/400" alt="kitten" />
+				</Carousel>
+				<!-- <Carousel client:load>
+					<input placeholder="test 1">
+					<input placeholder="test 2">
+					<input placeholder="test 3">
+				</Carousel>
+				<Carousel client:load>
+					<Image src="https://placekitten.com/200/200" width={200} height={200} alt="kitten"></Image>
+					<Image src="https://placekitten.com/200/300" width={200} height={200} alt="kitten"></Image>
+					<Image src="https://placekitten.com/200/400" width={200} height={200} alt="kitten"></Image>
+				</Carousel>
+				<Counter count={someProps.count} client:load />
+				<Carousel client:load>
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+				</Carousel> -->
+			
+			
 		</main>
 	</body>
 </html>

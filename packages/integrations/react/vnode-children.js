@@ -12,12 +12,13 @@ export default function convert(children) {
 			Array.isArray(node.children) && node.children.length
 				? node.children.map((child) => createReactElementFromNode(child)).filter(Boolean)
 				: undefined;
-
 		if (node.type === DOCUMENT_NODE) {
 			return createElement(Fragment, {}, childVnodes);
 		} else if (node.type === ELEMENT_NODE) {
-			const { class: className, ...props } = node.attributes;
-			return createElement(node.name, { ...props, className, key: `${id}-${key++}` }, childVnodes);
+			const { class: className,  ...props } = node.attributes;
+			const isVoidElement = ['img', 'input', 'br', 'hr', 'meta', 'area', 'base', 'col', 'command', 'embed', 'keygen', 'link', 'param', 'source', 'track', 'wbr'].includes(node.name);
+			const elementProps = isVoidElement ? { ...props, className, key:`${id}-${key++}` } : { ...props, className, children: childVnodes };
+			return createElement(node.name, elementProps);
 		} else if (node.type === TEXT_NODE) {
 			// 0-length text gets omitted in JSX
 			return node.value.trim() ? node.value : undefined;
