@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/server';
 import StaticHtml from './static-html.js';
 import { incrementId } from './context.js';
 import opts from 'astro:react:opts';
+import convert from './vnode-children.js';
 
 const slotName = (str) => str.trim().replace(/[-_]([a-z])/g, (_, w) => w.toUpperCase());
 const reactTypeof = Symbol.for('react.element');
@@ -48,6 +49,7 @@ async function check(Component, props, children) {
 
 		return React.createElement('div');
 	}
+	
 
 	await renderToStaticMarkup(Tester, props, children, {});
 
@@ -93,8 +95,7 @@ async function renderToStaticMarkup(Component, props, { default: children, ...sl
 	const newChildren = children ?? props.children;
 	if (children && opts.experimentalReactChildren) {
 		attrs['data-react-children'] = true;
-		const convert = await import('./vnode-children.js').then((mod) => mod.default);
-		newProps.children = convert(children);
+		newProps.children = convert(children.toString());
 	} else if (newChildren != null) {
 		newProps.children = React.createElement(StaticHtml, {
 			hydrate: needsHydration(metadata),
@@ -108,6 +109,7 @@ async function renderToStaticMarkup(Component, props, { default: children, ...sl
 	let html;
 	if (metadata?.hydrate) {
 		if ('renderToReadableStream' in ReactDOM) {
+			
 			html = await renderToReadableStreamAsync(vnode, renderOptions);
 		} else {
 			html = await renderToPipeableStreamAsync(vnode, renderOptions);
@@ -119,6 +121,7 @@ async function renderToStaticMarkup(Component, props, { default: children, ...sl
 			html = await renderToStaticNodeStreamAsync(vnode, renderOptions);
 		}
 	}
+	
 	return { html, attrs };
 }
 

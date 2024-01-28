@@ -1,7 +1,7 @@
 import { createElement, startTransition } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import StaticHtml from './static-html.js';
-import { convert } from './vnode-children.js';
+import convert from './vnode-children.js';
 
 function isAlreadyHydrated(element) {
 	for (const key in element) {
@@ -42,20 +42,6 @@ function getChildren(childString, experimentalReactChildren) {
 	} else {
 		return undefined;
 	}
-	console.log('--------------------hello-------------------');
-	/*if (experimentalReactChildren && childString) {
-		let children = [];
-		let template = document.createElement('template');
-		template.innerHTML = childString;
-		for (let child of template.content.children) {
-			children.push(createReactElementFromDOMElement(child));
-		}
-		return children;
-	} else if (childString) {
-		return createElement('img', { value: childString });
-	} else {
-		return undefined;
-	} */
 }
 
 export default (element) =>
@@ -67,12 +53,13 @@ export default (element) =>
 		for (const [key, value] of Object.entries(slotted)) {
 			props[key] = createElement(StaticHtml, { value, name: key });
 		}
-
-		const componentEl = createElement(
-			Component,
-			props,
-			getChildren(children, element.hasAttribute('data-react-children'))
-		);
+		const componentEl = (
+			  createElement(
+				Component,
+				props,
+				getChildren(children, element.hasAttribute('data-react-children'))
+			  )
+		  );
 		const rootKey = isAlreadyHydrated(element);
 		// HACK: delete internal react marker for nested components to suppress aggressive warnings
 		if (rootKey) {
