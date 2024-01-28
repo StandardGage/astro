@@ -121,7 +121,6 @@ async function renderToStaticMarkup(Component, props, { default: children, ...sl
 			html = await renderToStaticNodeStreamAsync(vnode, renderOptions);
 		}
 	}
-	
 	return { html, attrs };
 }
 
