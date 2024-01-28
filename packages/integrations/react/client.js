@@ -38,7 +38,7 @@ function getChildren(childString, experimentalReactChildren) {
 	if (experimentalReactChildren && childString) {
 		return convert(childString);
 	} else if (childString) {
-		return createElement('img', { value: childString });
+		return createElement(StaticHtml, { value: childString });
 	} else {
 		return undefined;
 	}
