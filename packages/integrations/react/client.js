@@ -53,13 +53,13 @@ export default (element) =>
 		for (const [key, value] of Object.entries(slotted)) {
 			props[key] = createElement(StaticHtml, { value, name: key });
 		}
-		const componentEl = (
+		const componentEl = 
 			  createElement(
 				Component,
 				props,
 				getChildren(children, element.hasAttribute('data-react-children'))
-			  )
-		  );
+			  );
+
 		const rootKey = isAlreadyHydrated(element);
 		// HACK: delete internal react marker for nested components to suppress aggressive warnings
 		if (rootKey) {
