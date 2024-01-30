@@ -95,7 +95,8 @@ async function renderToStaticMarkup(Component, props, { default: children, ...sl
 	const newChildren = children ?? props.children;
 	if (children && opts.experimentalReactChildren) {
 		attrs['data-react-children'] = true;
-		newProps.children = convert(children.toString());
+		const convert = await import('./vnode-children.js').then((mod) => mod.default);
+		newProps.children = convert(children);
 	} else if (newChildren != null) {
 		newProps.children = React.createElement(StaticHtml, {
 			hydrate: needsHydration(metadata),
