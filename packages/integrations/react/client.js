@@ -1,7 +1,6 @@
-import { createElement, startTransition } from 'react';
+import { createElement, startTransition, Fragment } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import StaticHtml from './static-html.js';
-import convert from './vnode-children.js';
 
 function isAlreadyHydrated(element) {
 	for (const key in element) {
@@ -11,27 +10,40 @@ function isAlreadyHydrated(element) {
 	}
 }
 
-function createReactElementFromDOMElement(element) {
-	let attrs = {};
-	for (const attr of element.attributes) {
-		attrs[attr.name] = attr.value;
+let ids = 0;
+// convert HTML string to React elements for experimental children flag; client-side
+function convert(children) {
+	let parser = new DOMParser();
+	let doc = parser.parseFromString(children.toString().trim(), 'text/html');
+	let id = ids++;
+	let key = 0;
+  
+	function createReactElementFromNode(node) {
+	  const childVnodes =
+		node.childNodes.length
+		  ? Array.from(node.childNodes).map((child) => createReactElementFromNode(child)).filter(Boolean)
+		  : undefined;
+  
+	  if (node.nodeType === Node.DOCUMENT_NODE) {
+		return createElement(Fragment, {}, childVnodes);
+	  } else if (node.nodeType === Node.ELEMENT_NODE) {
+		const props = Array.from(node.attributes).reduce((props, attr) => {
+		  props[attr.name] = attr.value;
+		  return props;
+		}, {});
+		const className = props.class;
+		delete props.class;
+		const isVoidElement = ['img', 'input', 'br', 'hr', 'meta', 'area', 'base', 'col', 'command', 'embed', 'keygen', 'link', 'param', 'source', 'track', 'wbr'].includes(node.nodeName.toLowerCase());
+		const elementProps = isVoidElement ? { ...props, className, key:`${id}-${key++}` } : { ...props, className, children: childVnodes, key:`${id}-${key++}` };
+		return createElement(node.nodeName.toLowerCase(), elementProps);
+	  } else if (node.nodeType === Node.TEXT_NODE) {
+		// 0-length text gets omitted in JSX
+		return node.nodeValue.trim() ? node.nodeValue : undefined;
+	  }
 	}
-
-	return createElement(
-		element.localName,
-		attrs,
-		Array.from(element.childNodes)
-			.map((c) => {
-				if (c.nodeType === Node.TEXT_NODE) {
-					return c.data;
-				} else if (c.nodeType === Node.ELEMENT_NODE) {
-					return createReactElementFromDOMElement(c);
-				} else {
-					return undefined;
-				}
-			})
-			.filter((a) => !!a)
-	);
+  
+	const root = createReactElementFromNode(doc.body);
+	return root.props.children;
 }
 
 function getChildren(childString, experimentalReactChildren) {
