@@ -27,14 +27,14 @@ function convert(children) {
 	  if (node.nodeType === Node.DOCUMENT_NODE) {
 		return createElement(Fragment, {}, childVnodes);
 	  } else if (node.nodeType === Node.ELEMENT_NODE) {
-		const props = Array.from(node.attributes).reduce((props, attr) => {
+		const innerProps = Array.from(node.attributes).reduce((props, attr) => {
 		  props[attr.name] = attr.value;
 		  return props;
 		}, {});
-		const className = props.class;
-		delete props.class;
+		const className = innerProps.class;
+		delete innerProps.class;
 		const isVoidElement = ['img', 'input', 'br', 'hr', 'meta', 'area', 'base', 'col', 'command', 'embed', 'keygen', 'link', 'param', 'source', 'track', 'wbr'].includes(node.nodeName.toLowerCase());
-		const elementProps = isVoidElement ? { ...props, className, key:`${id}-${key++}` } : { ...props, className, children: childVnodes, key:`${id}-${key++}` };
+		const elementProps = isVoidElement ? { ...innerProps, className, key:`${id}-${key++}` } : { ...innerProps, className, children: childVnodes, key:`${id}-${key++}` };
 		return createElement(node.nodeName.toLowerCase(), elementProps);
 	  } else if (node.nodeType === Node.TEXT_NODE) {
 		// 0-length text gets omitted in JSX
